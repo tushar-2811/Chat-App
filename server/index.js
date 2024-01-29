@@ -26,8 +26,18 @@ app.get("/" , (req , res) => {
 })
 
 io.on("connection" , (socket) => {
-    console.log("user connected");
-    console.log("Id" , socket.id);
+    console.log(`user connected, id : ${socket.id}`);  
+
+    socket.on("send-message" , (data) => {
+        console.log(data);
+        socket.to(data.roomId).emit("recieve-message",`recieved message from ${socket.id} -> ${data.message}`);
+    })
+
+
+    socket.on("disconnect" , () => {
+        console.log(`user disconnected : ${socket.id}`)
+    })
+   
 })
 
 
